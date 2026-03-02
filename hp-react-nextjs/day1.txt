@@ -1,0 +1,37 @@
+const [count, setCount] = useState(0);
+const handleAdd = () => {
+  setCount(count + 1);
+  setCount(count + 1);
+  // fix
+  setCount((prevCount) => prevCount + 1);
+  setCount((prevCount) => prevCount + 1);
+};
+// EXplanation:
+After the click the count will be 1 as the above approach use Stack that is direct value access which means the value of the count will be 0 
+in the function overall thats how u get 0 in all 3 updates and since they are batched it is useless 
+instead we can adapt call by refernce to get access to memory address and hence we can get latest value in each update 
+for example we can follow the functional update option of useState like setCount(prev=>prev+1)
+
+ /* What's your take on why React "batches" these updates instead of doing them instantly?*/
+
+ If React doesnt adapt batches, think of it like debouncing where we are typing some text and the api is called everytime when we type a key and it will affect the performance as the result is eventually dependent on the last key we entered 
+ so in the similiar fashion if there is no batching as we know whenever state changes it causes the react to re render the component 
+ and if we remove batching we encounter unnecessary renders which is not a good visualization over the screen so thats how react people come up with a batching 
+ and all the state updates of a particular function are batched and they are pushed as one update and therr by saving rendering cost 
+
+ const [user, setUser] = useState({ name: "Mazhar", age: 25 });
+
+const updateName = () => {
+  user.name = "Gemini"; // Mutation!
+  setUser(user); 
+};
+If I run updateName, will the component Re-render?
+No the component will not re render as the user is pointing to the same memory refernce and react re renders the component when the reference changes 
+in our scenario we are changing the property of user object but not address , react wants us to change address 
+There are 2 ways we can solve this scenarion
+1) Create a new object and clone user and update then it re renders 
+ex: const updatedObj = {...user};
+updatedObj.name="Gemini";
+setUser(updatedObj);
+2) Go for functional update 
+Ex: setUser(prev=>({...prev,name:'Gemini'});
