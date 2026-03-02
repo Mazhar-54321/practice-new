@@ -8,6 +8,17 @@ const user = {
 }
  const updateduser = {...user,  address:{...user.address, city:'London'}}
  console.log(updateduser)
+ function updateName(person) {
+  person.name = "Gemini"; // Mutation 1
+  person = { name: "New Person" }; // Mutation 2
+}
+
+const user1 = { name: "Mazhar" };
+updateName(user1);
+
+console.log(user1.name); // Output: "Gemini" (Mutation 1 affects the original object, Mutation 2 does not)
+
+
 //  The Core Summary: Memory & References
 // Ok my turn , behind the scene there are two types of memories used for storage purpose
 // 1) Stack( Used in case of fixed memory size like primitive values and memory references)
