@@ -1,43 +1,10 @@
-# Day 001 — JS Internals: Execution Context, Call Stack & Hoisting
+# Day 001 — JS Internals: Execution Context
 
-**Date:** ****\_\_\_****
-**Folder:** `js-ts/day-001.md`
-
----
-
-## What I understood today
-
-> No copy paste. Explain like you'd teach a junior dev.
-
-_Your answer:_
+**Date:** 17-03-2026
 
 ---
 
-## Core Concept: How the engine reads your code
-
-Every time JS runs a file or calls a function, it creates an **Execution Context** in two phases:
-
-**Creation phase** — allocates memory before any code runs
-
-- `var` → stored as `undefined`
-- `function declarations` → stored with full body
-- `let` / `const` → stored in **Temporal Dead Zone (TDZ)**
-
-**Execution phase** — runs code line by line
-
-Every Execution Context has 3 things:
-
-1. `VariableEnvironment` — your variables
-2. `LexicalEnvironment` — scope chain (who is my parent?)
-3. `ThisBinding` — what `this` points to
-
-The **Call Stack** is just a stack of these contexts. Global context always sits at the bottom.
-
----
-
-## Task 1 — Predict before you run
-
-Write your prediction first. Then run it. Then explain why.
+## Task 1 — Predict the output
 
 ```js
 console.log(x);
@@ -58,49 +25,16 @@ var sayBye = function () {
 };
 ```
 
-| Code                               | My Prediction | Actual Output | Why it happened |
-| ---------------------------------- | ------------- | ------------- | --------------- |
-| `console.log(x)` before `var x=5`  |               |               |                 |
-| `console.log(y)` before `let y=10` |               |               |                 |
-| `greet()` before declaration       |               |               |                 |
-| `sayBye()` before assignment       |               |               |                 |
+| Code                               | My Prediction                                                 | Actual Output    |
+| ---------------------------------- | ------------------------------------------------------------- | ---------------- |
+| `console.log(x)` before `var x=5`  | `undefined`                                                   | `undefined`      |
+| `console.log(y)` before `let y=10` | `ReferenceError` — program terminates, does not reach greet() | `ReferenceError` |
+| `greet()` before declaration       | `Good morning`                                                | `Good morning`   |
+| `sayBye()` before assignment       | `TypeError` — undefined is not a function                     | `TypeError`      |
 
 ---
 
-## Task 2 — Closure + Scope Chain
-
-```js
-function outer() {
-  const secret = 42;
-  function inner() {
-    console.log(secret);
-  }
-  return inner;
-}
-
-const fn = outer();
-fn();
-```
-
-**Answer in your own words:**
-
-**Q: When `fn()` runs, `outer` is already gone from the call stack. Why does `inner` still know `secret`?**
-
-_Your answer:_
-
-**Q: Which Execution Context does `inner` hold a reference to?**
-
-_Your answer:_
-
-**Q: Define closure in one sentence — no googling:**
-
-_Your answer:_
-
----
-
-## Task 3 — Simulate the JS Engine (the real challenge)
-
-Fill in what the engine stores during each phase for this code:
+## Task 2 — Simulate the JS Engine
 
 ```js
 var a = 1;
@@ -110,71 +44,57 @@ function add(b) {
 add(5);
 ```
 
-**Global Execution Context — Creation Phase:**
+**Global EC — Creation Phase:**
 
 ```
-VariableEnvironment: {
-  a: ___,       // what value does JS assign before execution?
-  add: ___      // what does JS store here?
-}
-ThisBinding: ___
+a    → undefined
+add  → full body
 ```
 
-**Global Execution Context — Execution Phase:**
+**Global EC — Execution Phase:**
 
 ```
-VariableEnvironment: {
-  a: ___,       // after line 1 runs
-  add: ___
-}
+a    → 1
 ```
 
-**add(5) — New Execution Context — Creation Phase:**
+**add(5) — New EC — Creation Phase:**
 
 ```
-VariableEnvironment: {
-  b: ___        // what value?
-}
-LexicalEnvironment: {
-  outer: ___    // points to?
-}
+b              → 5
+outer reference → a = 1
 ```
 
 **add(5) — Execution Phase:**
 
 ```
-a is looked up → found in: ___
-b = ___
-return value = ___
+a looked up in → outer reference
+b              → 5
+return         → 6
 ```
 
 ---
 
-## Reflection
+## Task 3 — In my own words
 
-**What is TDZ in your own words?**
+**What is TDZ?**
 
-_Your answer:_
+TDZ is a lock on a variable that is declared with let or const keyword.
 
 **Why does `var` behave differently than `let`/`const`?**
 
-_Your answer:_
+Since var doesn't get a lock on variable it is initialized with undefined so using it will not terminate program when compared to its peers.
 
-**What would happen if JS had no call stack?**
+**What happens when a function is called — in one line:**
 
-_Your answer:_
+When a function is called its execution context is created which has 2 phases creation and execution phase and it will have lexical environment as well that will have outer reference so whenever a variable is encountered it is searched locally and then moved to outer scope.
 
 **What confused me today:**
 
-_Your answer:_
+Nothing confused me, everything went well.
 
 **What clicked today:**
 
-_Your answer:_
-
-**What I want to explore tomorrow:**
-
-_Your answer:_
+Everything went well.
 
 ---
 
