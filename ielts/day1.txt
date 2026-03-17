@@ -1,3 +1,0 @@
-1. The landing page was loading slowly.
-2. I optimized the image assets.
-Since the landing page was loading slowly, I optimized the image assets.
